@@ -23,7 +23,7 @@ The client ```(called SoundClient)``` uses ***SOUND, STORE, QUERY, BYE and END**
 ## ***Operation of the client-server pair is as follows:***
 
 >**```SOUND :```** This message is sent from the client to the server to make the client's connection to the server, thus initiating a session. It contains the ASCII string “SOUND” followed by the newline character “\n”. On sending the SOUND message, the client waits for a return message from the server via the socket that connects them. After receiving and displaying the return message the client loops back so that the user can initiate sending of another message.
-On receipt of a SOUND message from a client, the server returns the string “SOUND: OK” followed by a newline character and waits for further instructions from the client. The message sequence to start a calculation session is as follows:
+On receipt of a SOUND message from a client, the server returns the string ***“SOUND: OK”*** followed by a newline character and waits for further instructions from the client. The message sequence to start a calculation session is as follows:
 ```
 Client: SOUND
 Server: SOUND: OK
@@ -72,7 +72,7 @@ QUERY: OK
 ```
 A typical message sequence would be as follows:
 Client: BYE
-SERVER: BYE: OK***
+SERVER: BYE: OK
 ```
 
 >**```END:```**  This message is sent from the client to the server, instructing the server to shutdown. The client sends the ASCII string ***“END”*** followed by a newline character. After reading and displaying the returned message from the server, the client should close its connection. The server, on receipt of the END message, should return the string ***“END: OK”*** followed by a newline character, then should close all open sockets and terminate. Note that any animal sound pairs added since the server started are not saved, and if the server is subsequently restarted, it reverts to knowing only about the initial five pairs.
