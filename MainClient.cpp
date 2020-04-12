@@ -1,4 +1,4 @@
-SOUNDCLIENT
+//SOUNDCLIENT
 
 #include <iostream>
 #include <sys/types.h>
