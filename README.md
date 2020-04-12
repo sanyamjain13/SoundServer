@@ -7,13 +7,13 @@ Separately, the client will be started and will contact the server on a given IP
 
 >The server, which will be called SoundServer, will operate as follows:
 
-
+```
 * Return the sound made by animals named by a client after the client connects to the server using the SOUND instruction,
 *	Accepts a STORE message used for storing new (animal, sound) pairs,
 *	Accepts a QUERY message used to ask which animals it knows,
 *	Accepts a BYE message that results in closing of the current session between the client and the server.
 *	Accepts an END message that results in closing of the current session and termination of the server.
-
+```
 >Operation of the client and the server is as follows:
 
 When the SoundServer server starts, it initially knows about five pairs each containing an animal’s name and the sound it makes, e.g. ‘dog’ and ‘woof’. The server stores this start-up data in an internal data structure of size sufficient to store the initial five pairs, plus up to another ten pairs. The server then waits for a client to connect to it using a server port number specified by you when you start the server. The server is required to concurrently interact with clients. In other words, if the server is interacting with a client, it can interact with other clients also at the same time.
