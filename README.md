@@ -22,7 +22,7 @@ The client ```(called SoundClient)``` uses ***SOUND, STORE, QUERY, BYE and END**
 
 >Operation of the ***client-server*** pair is as follows:
 
--**```SOUND`:```** This message is sent from the client to the server to make the client's connection to the server, thus initiating a session. It contains the ASCII string “SOUND” followed by the newline character “\n”. On sending the SOUND message, the client waits for a return message from the server via the socket that connects them. After receiving and displaying the return message the client loops back so that the user can initiate sending of another message.
+**```SOUND`:```** This message is sent from the client to the server to make the client's connection to the server, thus initiating a session. It contains the ASCII string “SOUND” followed by the newline character “\n”. On sending the SOUND message, the client waits for a return message from the server via the socket that connects them. After receiving and displaying the return message the client loops back so that the user can initiate sending of another message.
 
 ***On receipt of a SOUND message from a client, the server returns the string “SOUND: OK” followed by a newline character and waits for further instructions from the client. The message sequence to start a calculation session is as follows:***
 ```
@@ -31,15 +31,16 @@ Server: SOUND: OK
 ```
 
 
--**```Requesting sounds```** is performed when the client sends a string, representing the name of an animal, terminated by a newline character. On receipt of such a string, the server returns the sound made by the animal specified by the client, or indicates that it does not know that animal, as shown in the following examples.
+>**```Requesting sounds```** is performed when the client sends a string, representing the name of an animal, terminated by a newline character. On receipt of such a string, the server returns the sound made by the animal specified by the client, or indicates that it does not know that animal, as shown in the following examples.
 
->***Client: DOG
->Server: A DOG SAYS WOOF
->Client: CAT
-?Server: I DON’T KNOW CAT***
+```
+*Client: DOG
+*Server: A DOG SAYS WOOF
+*Client: CAT
+*Server: I DON’T KNOW CAT
+```
 
-
--**```STORE:```** This message is sent from the client to the server and causes the following animal name and sound made by that animal (i.e. two arguments to the STORE instruction) to be stored in the server’s memory. 
+>**```STORE:```** This message is sent from the client to the server and causes the following animal name and sound made by that animal (i.e. two arguments to the STORE instruction) to be stored in the server’s memory. 
 The exchange is started by the sending of the ACSII string **“STORE”** followed by the newline character. Following this is the name of the animal to be stored, a newline character, and then the sound made by that animal. The server responds with the **“STORE: OK”** message to confirm that the store operation has been completed.
 
 ***A typical message sequence would be as follows:***
