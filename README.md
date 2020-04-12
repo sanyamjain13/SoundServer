@@ -1,7 +1,9 @@
 # SoundServer
 
-The goal of this assignment is to implement a TCP client server application to implement a service that returns the sounds made by animals. The name of each requested animal will be specified by a client whose process you will also create. You can use either C or C++. The server will start in passive mode listening on a specified port for a transmission from a client. Separately, the client will be started and will contact the server on a given IP address and port number that must be entered via the command line.
-For communication with server client has to register itself with server, firstly client have to log in with id and password. If id and password of client is correct then client can communicate with server otherwise server sends a “Sorry your id and password is not correct” response to the client.
+***A TCP client server application to implement a service that returns the sounds made by animals. The name of each requested animal will be specified by a client whose process you will also create. The server will start in passive mode listening on a specified port for a transmission from a client. Separately, the client will be started and will contact the server on a given IP address and port number that must be entered via the command line.***
+
+***For communication with server client has to register itself with server, firstly client have to log in with id and password. If id and password of client is correct then client can communicate with server otherwise server sends a “Sorry your id and password is not correct” response to the client.***
+
 The server, which will be called SoundServer, will operate as follows:
 
 
