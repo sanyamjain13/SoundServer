@@ -8,9 +8,9 @@ Separately, the client will be started and will contact the server on a given IP
 >The server, which will be called **SoundServer**, will operate as follows:
 
 
-* ```Return the sound made by animals named by a client after the client connects to the server using the SOUND instruction```
-*	Accepts a STORE message used for storing new (animal, sound) pairs,
-*	Accepts a QUERY message used to ask which animals it knows,
+* ```Return the sound made by animals named by a client after the client connects to the server using the ***SOUND*** instruction```
+*	```Accepts a STORE message used for storing new (animal, sound) pairs ```
+*	```Accepts a QUERY message used to ask which animals it knows```
 *	Accepts a BYE message that results in closing of the current session between the client and the server.
 *	Accepts an END message that results in closing of the current session and termination of the server.
 
