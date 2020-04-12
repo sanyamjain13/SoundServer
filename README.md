@@ -14,15 +14,15 @@ Separately, the client will be started and will contact the server on a given IP
 *	```Accepts a BYE message that results in closing of the current session between the client and the server.```
 *	```Accepts an END message that results in closing of the current session and termination of the server.```
 
->Operation of the client and the server is as follows:
+##***Operation of the client and the server is as follows:***
 
 When the ```SoundServer``` server starts, it initially knows about **five** pairs each containing an animal’s name and the sound it makes, e.g. ‘dog’ and ‘woof’. The server stores this start-up data in an internal data structure of size sufficient to store the initial five pairs, plus up to another ten pairs. The server then waits for a client to connect to it using a server port number specified by you when you start the server. The server is required to concurrently interact with clients. In other words, if the server is interacting with a client, it can interact with other clients also at the same time.
 
 The client ```(called SoundClient)``` uses ***SOUND, STORE, QUERY, BYE and END*** messages to instruct the server. The client program will be capable of sending any of these messages on instruction from the user.
 
->Operation of the ***client-server*** pair is as follows:
+## ***Operation of the client-server pair is as follows:***
 
-**```SOUND`:```** This message is sent from the client to the server to make the client's connection to the server, thus initiating a session. It contains the ASCII string “SOUND” followed by the newline character “\n”. On sending the SOUND message, the client waits for a return message from the server via the socket that connects them. After receiving and displaying the return message the client loops back so that the user can initiate sending of another message.
+**```SOUND :```** This message is sent from the client to the server to make the client's connection to the server, thus initiating a session. It contains the ASCII string “SOUND” followed by the newline character “\n”. On sending the SOUND message, the client waits for a return message from the server via the socket that connects them. After receiving and displaying the return message the client loops back so that the user can initiate sending of another message.
 
 ***On receipt of a SOUND message from a client, the server returns the string “SOUND: OK” followed by a newline character and waits for further instructions from the client. The message sequence to start a calculation session is as follows:***
 ```
@@ -33,12 +33,12 @@ Server: SOUND: OK
 
 >**```Requesting sounds```** is performed when the client sends a string, representing the name of an animal, terminated by a newline character. On receipt of such a string, the server returns the sound made by the animal specified by the client, or indicates that it does not know that animal, as shown in the following examples.
 
-```
+
 *Client: DOG
 *Server: A DOG SAYS WOOF
 *Client: CAT
 *Server: I DON’T KNOW CAT
-```
+
 
 >**```STORE:```** This message is sent from the client to the server and causes the following animal name and sound made by that animal (i.e. two arguments to the STORE instruction) to be stored in the server’s memory. 
 The exchange is started by the sending of the ACSII string **“STORE”** followed by the newline character. Following this is the name of the animal to be stored, a newline character, and then the sound made by that animal. The server responds with the **“STORE: OK”** message to confirm that the store operation has been completed.
