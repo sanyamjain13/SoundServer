@@ -346,7 +346,7 @@ int main()
                     //Handling of CLIENT REQUESTS (QUERY , STORE, END , BYE, ANIMAL SOUND) 
                     else
                     {
-                        cout<<"Client "<<i+1<<" : "<<buff<"\n";
+                        cout<<"Client "<<i+1<<" : "<<buff<<"\n";
                         
                         //Request from the Client
                         string userIp=lowerCase(buff);
@@ -378,10 +378,9 @@ int main()
                             getline(ss,animal,' ');
                             getline(ss,sound,' ');
                             
-                            std::transform(animal.begin(),animal.end(),animal.begin(),::tolower);
-                            std::transform(sound.begin(),sound.end(),sound.begin(),::tolower);
-                            // cout<<"Animal : "<<animal<<endl;
-                            // cout<<"Sound : "<<sound<<endl;
+                            animal=lowerCase(animal);
+                            sound=lowerCase(sound);
+                           
                             if(a->addAnimalSound(animal,sound))
                             {  
                                 string res="success";
@@ -392,6 +391,8 @@ int main()
                         }
 
                         //***********************************************************************
+
+                        //WHEN CLIENT WANTS TO KNOW WHICH ANIMAL SOUNDS DO WE KNOW
 
                         else if (userIp.compare("query")==0) 
                         {
