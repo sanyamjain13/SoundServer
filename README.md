@@ -82,5 +82,11 @@ A typical message sequence would be as follows:
 Client: END
 Server: END: OK
 ```
+### Prerequisites
+> * Linux OS (Ubuntu)
+> * C++
 
+### Modules
+> - [SoundServer.cpp](SoundServer.cpp)
+> - [SoundClient.cpp](SoundClient.cpp)
 
