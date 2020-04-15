@@ -1,4 +1,3 @@
-//SOUNDCLIENT
 
 #include <iostream>
 #include <sys/types.h>
@@ -29,12 +28,12 @@ int main()
 
 	//----------------------------------------------------------------------------
 	sockFd = socket(AF_INET, SOCK_STREAM, 0);
-	cout<<"__________________________________________________\n\n";
+	cout<<"\n______________________________________\n";
 	if(sockFd == -1)
 	{
 		cout<<"\nSocket creation failed...\n";
 		exit(0);
-	}
+	} 
 	else
 		cout<<"\nSocket successfully created :)\n\n";
 
@@ -52,20 +51,24 @@ int main()
 		exit(0);
 	}
 	else
-		cout<<"Connected to the server Successfully :D \n";
+		cout<<"Connected to the server Successfully! \n";
+    
 	//----------------------------------------------------------------------------
 	
 	int n;
+
 	for( ; ; )
 	{
 		//----------------------------------------------------------------------------
 		
 		//LOGIN MODULE OF CLIENT
+		
 		if(loginStats < 0)
 		{	
-			cout<<"\n__________________________________________________\n";
-			cout<<"\nLogin With Your Credentials : \n\n";
-
+			cout<<"\n______________________________________\n";
+			
+            cout<<"\nLogin With Your Credentials : \n\n";
+            
 			string id,password,login="";
 			cout<<"UserId : ";
 			getline(cin,id);
@@ -79,23 +82,39 @@ int main()
 			
 			buff[login.size()]='\0';		
 			
-			n=write(sockFd,buff,sizeof(buff));
+			n=write(sockFd,buff,strlen(buff));
+            if(n<2) 
+            {   
+                cout<<"Incomplete Write by Client .. Terminating \n";
+                break;
+            }
 
 			int status=0;
 			int result=read(sockFd,&status,sizeof(status));
-			if(ntohl(status)>0)
+			if(ntohl(status)==1)
 			{
-				cout<<"\nLogin Successfully ! \n";
-				cout<<"\n-> Type 'sound' to Know if Server is Active or not ! \n";
-				cout<<"__________________________________________________\n\n";
+				cout<<"\n~~ Welcome to the SoundServer ~~!\n\nYou are successfully Registered  !:) \n";
+                cout<<"\nNow you are an active user of 'SoundServer' !! \n";
+				cout<<"\n>> Type 'sound' to Know if Server is Active or not ! \n";
+				cout<<"_____________________________________________________\n\n";
 				loginStats=1;
 			}
 
-			else
+			else if(ntohl(status)==2)
 			{
-				cout<<"Sorry your ID & Password is not correct , EXITING ... ! \n";
-				break;
+				cout<<"~~ Welcome User ~~\n\nSuccessfully Logged in!  \n";
+                cout<<"\n-> Type 'sound' to Know if Server is Active or not ! \n";
+				cout<<"_____________________________________________________\n\n";
+
+				loginStats=1;
 			}
+
+            else
+            {
+                cout<<"\nUserId or Password does'nt match... \n";
+				bzero(buff,MAX);
+				loginStats=-1;
+            }
 
 			//LOGIN MODULE OF CLIENT ENDS ...
 		}
@@ -104,133 +123,139 @@ int main()
 		//**************************************************************
 		
 		//CLIENT REQUEST HANDLING STARTS
-
-		bzero(buff,MAX);
-		cout<<"Client Message : ";
-		
-		//Getting input from the user....
-		cin.getline(buff,sizeof(buff));
-
-		//Storing the user input before the buffer gets cleared
-		string userIp = buff;
-		
-		//Converting User Input to lowercase for avoiding further errors
-		std::transform(userIp.begin(),userIp.end(),userIp.begin(),::tolower);
-
-		//If the user input is : STORE , then take input from user as animal name & sound
-		if(userIp.compare("store")==0)
-		{	
-			string animalName,animalSound,storeResult="";
-			cout<<"Animal Name : ";
-			getline(cin,animalName);
-
-			cout<<"Animal Sound : ";
-			getline(cin,animalSound);
-
-			storeResult=userIp+" "+animalName+" "+animalSound;
-			std::copy(storeResult.begin(),storeResult.end(),buff);
-		}		
-
-		//writing the userinput to the server for a response
-		n=write(sockFd,buff,sizeof(buff));
-
-		if(n<0) 			
-		{
-			cout<<"Error in Writing .. Try Again \n";
-			continue;
-		}
-
-		//****************************************************************************
-		
-		//GETTING RESPONSE FROM THE SERVER IN THE BUFFER...
-
-		bzero(buff,MAX);
-		
-		//Reading response of server from the socket
-		n=read(sockFd,buff,sizeof(buff));
-
-		//when Server sends no data, so prematurely exit;
-		if(n<=0)
-		{	
-			cout<<"\n\nClosing Your Connection ... \n\n";
-			break;
-		}
-
-		//Response from the server in this result;
-		string result = buff;
-
-		//###############################################################
-
-		//if user wants to check if server is active, so it sends SOUND
-		if(userIp.compare("sound")==0)
-		{	
-			cout<<"\nSERVER : "<<result<<"\n\n";
-		}
-		
-		//###############################################################
-
-		else if(userIp.compare("store")==0)
-		{	
-			cout<<"\n-------------------------------------------\n";
-
-			if(result=="success") cout<<"Sound Successfully Stored ! :) \n";
-			
-			cout<<"-------------------------------------------\n";
-
-		}
-
-		//###############################################################
-
-		else if (userIp.compare("query")==0) 
-		{
-			cout<<"\n================================== \n";
-
-			if(result=="none") cout<<"I DONT KNOW ANY ANIMAL SOUND :( \nQUERY : OK\n";
-			else cout<<"\nList of Animal Sounds I know : \n\n"<<result<<"\n>> QUERY : OK";
-			
-			cout<<"\n================================== \n";
-			
-		}
-
-		//###############################################################
-
-		else if (userIp.compare("bye")==0)
-		{
-			cout<<"Closing Your Connection with the server! Bye .. \n\n";
-			break;
-		}
-
-		//###############################################################
-
-		else if (userIp.compare("end")==0)
-		{
-			cout<<"\nENDING THE SERVER ..\n";
-			break;
-		}
-
-		//###############################################################
-
 		else
-		{   
-			cout<<"\n~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n\n";
-
-			if(result=="none") 
-				cout<<"Sorry! I dont Know '"<<userIp<<"'\n";
+		{
+			bzero(buff,MAX);
+			cout<<"Client Message : ";
 			
-			else 
-				cout<<"SOUND : A '"<<userIp<<"' SAYS '"<<result<<"'\n";
+			//Getting input from the user....
+			cin.getline(buff,sizeof(buff));
 
-			cout<<"\n~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n\n";
+			//Storing the user input before the buffer gets cleared
+			string userIp = buff;
+			
+			//Converting User Input to lowercase for avoiding further errors
+			std::transform(userIp.begin(),userIp.end(),userIp.begin(),::tolower);
+
+			//If the user input is : STORE , then take input from user as animal name & sound
+			if(userIp.compare("store")==0)
+			{	
+				string animalName,animalSound,storeResult="";
+				cout<<"Animal Name : ";
+				getline(cin,animalName);
+
+				cout<<"Animal Sound : ";
+				getline(cin,animalSound);
+
+				storeResult=userIp+" "+animalName+" "+animalSound;
+				std::copy(storeResult.begin(),storeResult.end(),buff);
+			}		
+
+			//writing the userinput to the server for a response
+			n=write(sockFd,buff,sizeof(buff));
+
+			if(n<0) 			
+			{
+				cout<<"Error in Writing .. Try Again \n";
+				cout<<"\nXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
+				continue;
+			}
+
+			//****************************************************************************
+			
+			//GETTING RESPONSE FROM THE SERVER IN THE BUFFER...
+
+			bzero(buff,MAX);
+			
+			//Reading response of server from the socket
+			n=read(sockFd,buff,sizeof(buff));
+
+			//when Server sends no data, so prematurely exit;
+			if(n<=0)
+			{	
+				cout<<"Server Terminated Prematurely ! :( \n";
+				cout<<"\n\nClosing Your Connection ... \n";
+				cout<<"\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
+				exit(0);
+			}
+
+			//Response from the server in this result;
+			string result = buff;
+
+			//###############################################################
+
+			//if user wants to check if server is active, so it sends SOUND
+			if(userIp.compare("sound")==0)
+			{	
+				cout<<"\nSERVER : "<<result<<"\n";
+			}
+			
+			//###############################################################
+
+			else if(userIp.compare("store")==0)
+			{	
+				cout<<"----------------------------------\n";
+
+				if(result=="success") cout<<"Sound Successfully Stored ! :) \n";
+				
+				cout<<"----------------------------------\n";
+
+			}
+
+			//###############################################################
+
+			else if (userIp.compare("query")==0) 
+			{
+				cout<<"\n================================== \n";
+
+				if(result=="none") cout<<"I DONT KNOW ANY ANIMAL SOUND :( \nQUERY : OK\n";
+				else cout<<"\nList of Animal Sounds I know : \n\n"<<result<<"\n>> QUERY : OK";
+				
+				cout<<"\n================================== \n";
+				
+			}
+
+			//###############################################################
+
+			else if (userIp.compare("bye")==0)
+			{
+				cout<<"Closing Your Connection with the server! Bye .. \n\n";
+				break;
+			}
+
+			//###############################################################
+
+			else if (userIp.compare("end")==0)
+			{
+				cout<<"\nENDING THE SERVER ..\n";
+				break;
+			}
+
+			//###############################################################
+
+			else
+			{   
+				cout<<"\n~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n";
+
+				if(result=="none") 
+					cout<<"Sorry! I dont Know '"<<userIp<<"'\n";
+				
+				else 
+					cout<<"SOUND : A '"<<userIp<<"' SAYS '"<<result<<"'\n";
+
+				cout<<"~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n\n";
+			}
+
+			//###############################################################
+
+			//Request Handling Ends;
+			//**************************************************************************************
+
 		}
 
-		//###############################################################
-
-		//Request Handling Ends;
-        //**************************************************************************************
-
-	
 	}
 
 	close(sockFd);
 	return 1;
 }
+        

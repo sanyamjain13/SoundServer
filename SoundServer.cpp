@@ -15,6 +15,7 @@
 #include<string.h>
 #include<unordered_map>
 #include<algorithm>
+#include<vector>
 
 #define SA struct sockaddr
 #define LISTENQ 128
@@ -238,7 +239,6 @@ int main()
                 cout<<"Too Many Clients! "<<endl;
                 close(connFd);
                 continue;
-                cout<<"Hello"<<endl;
             }
 
             //adding new decriptor to the set
@@ -278,8 +278,9 @@ int main()
                 if(n==0)
                 {       
                     //connection closed by client;
-                    cout<<"\n\nClosing Connection with Client "<<i+1<<" !!! \n";
-                    cout<<"\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
+                    cout<<"\n\n********************************************";
+                    cout<<"\nClient "<<i+1<<" has not entered any input"<<endl;
+                    cout<<"\nClosing Connection with Client "<<i+1<<" !! \n";
                     
                     /* When our server reads this connected socket, if read returns 0. We then close this socket 
                     and update our data structures accordingly. The value of client [i] is set to –1 and 
@@ -308,15 +309,16 @@ int main()
 
                         int status=-1; 
 
-                        cout<<"\n\n---------------------------------\n";
-                        cout<<"Credentials Entered by Client-"<<i+1<<endl;
-                        cout<<"\nClient-"<<i+1<<" UserID : "<<id<<endl;
-                        cout<<"Client-"<<i+1<<" Password : "<<pass<<endl;
-                        cout<<"-------------------------------------\n";
+                        cout<<"\n--------------------------------\n";
+                        cout<<"\nCredentials Entered by Client : "<<i+1<<endl;
+                        cout<<"\nClient : "<<i+1<<" UserID => "<<id<<endl;
+                        cout<<"Client : "<<i+1<<" Password => "<<pass<<endl;
+                        cout<<"\n--------------------------------\n";
+
                         
                         if(!users.count(id))
                         {   
-                            cout<<"\nRegistering client: "<<i+1<<endl;
+                            cout<<"\nRegistering client : "<<i+1<<endl;
                             users[id]=pass;
                             userStatus[sockfd]=1;
                             status=htonl(1); // 1: New user registered
@@ -326,24 +328,20 @@ int main()
 
                         else if(users[id]==pass)
                         {   
-                            cout<<"Client- "<<i+1<<": Logged into the server!"<<endl;
+                            cout<<"Client :"<<i+1<<" Logged into the server!"<<endl;
                             userStatus[sockfd]=1;
                             status=htonl(2); //2: user logged in
                             write(sockfd,&status,sizeof(status));
-                            cout<<"--------------------------------\n\n";
+                            cout<<"--------------------------------\n";
                         }
 
                         else
                         {   
-                            cout<<"Credentials gone wrong, Terminating Client: "<<i+1<<endl;
-                            
-                            shutdown(sockfd,SHUT_RDWR);
-                            close(sockfd);
-                            FD_CLR(sockfd,&allset);
-                            Client[i] = -1;
-                            userStatus.erase(sockfd);
-                            
-                            cout<<"Successfully Closed the connection !  \n";
+                            cout<<"Credentials Incorrect by => Client : "<<i+1<<endl;
+                            userStatus[sockfd]=-1;
+                            status=htonl(3); //3: user details wrong
+                            write(sockfd,&status,sizeof(status));
+
                             cout<<"-----------------------------------\n";
                         }
 
@@ -355,22 +353,32 @@ int main()
                     //Handling of CLIENT REQUESTS (QUERY , STORE, END , BYE, ANIMAL SOUND) 
                     else
                     {
-                        cout<<"Client "<<i+1<<" : "<<buff<<"\n";
+                        cout<<"\nClient "<<i+1<<" : "<<buff<<"\n";
                         
                         //Request from the Client
                         string userIp=lowerCase(buff);
+                        
                         stringstream ss(userIp);
-                        getline(ss,userIp,' ');
+                        vector<string>input;
+                        
+                        while(getline(ss,userIp,' '))
+                        {
+                            if(userIp.size()==0) continue;
+                            input.push_back(userIp);
+                        }
 
+                        userIp=input[0];
+                        
                         bzero(buff,MAX);
                         
                         //***********************************************************************
                         
                         //if client wants to check if server is active
+                        
                         if(userIp.compare("sound")==0)
                         {
                             cout<<"\nUSER : Hello Server Are You there ? \n";
-                            string ok="Yes SoundServer is Active :-))\n\n";
+                            string ok="Yes SoundServer is Active :-))\n";
                             cout<<ok<<endl;
 
                             std::copy(ok.begin(), ok.end(),buff);
@@ -382,21 +390,27 @@ int main()
                         //WHEN WE ARE STORING NEW ANIMAL SOUND IN THE DATABASE
                         else if(userIp.compare("store")==0)
                         {   
-                            //Tokenising 
-                            string animal,sound;
-                            getline(ss,animal,' ');
-                            getline(ss,sound,' ');
                             
-                            animal=lowerCase(animal);
-                            sound=lowerCase(sound);
-                           
-                            if(a->addAnimalSound(animal,sound))
-                            {  
-                                string res="success";
-                                std::copy(res.begin(),res.end(),buff);
-                                write(sockfd,buff,sizeof(buff));
+                            if(input.size()!=3)
+                            {   
+                                write(1,"Failed to store!\n",sizeof("Failed to store!\n"));
+                                write(sockfd,"fail",sizeof("fail"));
                             }
-                        
+
+                            else
+                            {
+                                string animal,sound;
+
+                                animal=lowerCase(input[1]);
+                                sound=lowerCase(input[2]);
+
+                                if(a->addAnimalSound(animal,sound))
+                                {  
+                                    string res="success";
+                                    std::copy(res.begin(),res.end(),buff);
+                                    write(sockfd,buff,sizeof(buff));
+                                }
+                            }
                         }
 
                         //***********************************************************************
@@ -407,7 +421,7 @@ int main()
                         {
                             string result= a->getAnimals();
                             if(result=="") result="none";
-                            cout<<"QUERY RESULT : \n"<<result<<"\n\n";
+                            cout<<"\n"<<result<<"\n\n";
                             std::copy(result.begin(), result.end(),buff);
                             write(sockfd,buff,sizeof(buff));
                         }
@@ -453,7 +467,7 @@ int main()
                             FD_ZERO(&allset);
                             close(listenFd);                          
                             
-                            cout<<"\n\nSERVER CLOSED BY CLIENT "<<i+1<<"\n";
+                            cout<<"\nSERVER CLOSED BY CLIENT : "<<i+1<<"\n";
                             cout<<"___________________________________\n";
                             exit(0);
                         }
@@ -463,7 +477,7 @@ int main()
                         //HANDLING THR ANIMAL SOUNDS
                         else
                         {   
-                            cout<<"SOUND : "<<a->getSound(userIp)<<endl;
+                            cout<<"\nSOUND : "<<a->getSound(userIp)<<endl;
                             string result= a->getSound(userIp);
                             std::copy(result.begin(),result.end(),buff);
                             write(sockfd,buff,sizeof(buff));
