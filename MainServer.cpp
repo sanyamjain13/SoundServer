@@ -117,7 +117,7 @@ int main()
     
     // Declaring All the variables used in the program
     int listenFd, connFd, sockfd, maxfd, maxi, nready, i;
-    int Client[FD_SETSIZE],loginStatus[CLIENTSIZE];;
+    int Client[FD_SETSIZE];
     
     unordered_map<string,string>users;
     unordered_map<int,int>userStatus;
