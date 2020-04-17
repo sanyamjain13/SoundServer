@@ -79,6 +79,7 @@ class animalSound
                 {
                     res+=std::to_string(i)+". "+it->first+"\n\n";
                 }
+
                 else
                 {
                     res+=std::to_string(i)+". "+it->first+"  ";
@@ -163,7 +164,6 @@ int main()
     for(i=0; i < CLIENTSIZE; i++)
     {
         Client[i]=-1;
-        loginStatus[i]=-1;
     }
 
     FD_ZERO(&allset);
@@ -341,7 +341,6 @@ int main()
                             userStatus[sockfd]=-1;
                             status=htonl(3); //3: user details wrong
                             write(sockfd,&status,sizeof(status));
-
                             cout<<"-----------------------------------\n";
                         }
 
@@ -356,23 +355,24 @@ int main()
                         cout<<"\nClient "<<i+1<<" : "<<buff<<"\n";
                         
                         //Request from the Client
+
                         string userIp=lowerCase(buff);
                         
                         stringstream ss(userIp);
                         vector<string>input;
                         
                         while(getline(ss,userIp,' '))
-                        {
+                        {   
                             if(userIp.size()==0) continue;
                             input.push_back(userIp);
                         }
 
                         userIp=input[0];
-                        
-                        bzero(buff,MAX);
-                        
+
+                        bzero(buff,MAX); 
+
                         //***********************************************************************
-                        
+                            
                         //if client wants to check if server is active
                         
                         if(userIp.compare("sound")==0)
@@ -388,6 +388,7 @@ int main()
                         //***********************************************************************
 
                         //WHEN WE ARE STORING NEW ANIMAL SOUND IN THE DATABASE
+                        
                         else if(userIp.compare("store")==0)
                         {   
                             
@@ -443,6 +444,7 @@ int main()
                         //***********************************************************************
 
                         //WHEN A CLIENT ENDS THE SERVER
+                        
                         else if (userIp.compare("end")==0)
                         {   
                             //CLOSING ALL THE ACTIVE CLIENTS , UNSETTING THEIR SOCKFDS
@@ -475,6 +477,7 @@ int main()
                         //***********************************************************************
 
                         //HANDLING THR ANIMAL SOUNDS
+                        
                         else
                         {   
                             cout<<"\nSOUND : "<<a->getSound(userIp)<<endl;
@@ -487,6 +490,7 @@ int main()
 
                             
                     }
+                    
                     //------------------------------------------------------------------------
                 }
 
