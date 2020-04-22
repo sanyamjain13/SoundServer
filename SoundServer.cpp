@@ -23,6 +23,7 @@
 #define CLIENTSIZE 5
 using namespace std;
 
+//databse manager class
 class animalSound
 {
     public:        
@@ -79,7 +80,6 @@ class animalSound
                 {
                     res+=std::to_string(i)+". "+it->first+"\n\n";
                 }
-
                 else
                 {
                     res+=std::to_string(i)+". "+it->first+"  ";
@@ -119,7 +119,7 @@ int main()
     
     // Declaring All the variables used in the program
     int listenFd, connFd, sockfd, maxfd, maxi, nready, i;
-    int Client[FD_SETSIZE],loginStatus[CLIENTSIZE];;
+    int Client[CLIENTSIZE],loginStatus[CLIENTSIZE];;
     
     unordered_map<string,string>users;
     unordered_map<int,int>userStatus;
@@ -164,6 +164,7 @@ int main()
     for(i=0; i < CLIENTSIZE; i++)
     {
         Client[i]=-1;
+        loginStatus[i]=-1;
     }
 
     FD_ZERO(&allset);
@@ -300,12 +301,21 @@ int main()
                     if(userStatus[sockfd]<0)
                     {
                         stringstream userDetails(buff);
-                        string id,pass;
-                        getline(userDetails,id,' ');
-                        getline(userDetails,pass,' ');
+                        string id,pass,loginInput;
+
+                        //array that stores the user login details after trimming of white spaces
+                        vector<string>details;
                         
-                        id=lowerCase(id);
-                        pass=lowerCase(pass);
+                        //removing extra whitespaces from the login details (userId , Password)
+                        while(getline(userDetails,loginInput,' '))
+                        {
+                            if(loginInput.size()==0) continue;
+                            details.push_back(loginInput);
+                        }
+                        
+                        //converting userid , pass in lowercase to avoid errors
+                        id=lowerCase(details[0]);
+                        pass=lowerCase(details[1]);
 
                         int status=-1; 
 
@@ -341,6 +351,7 @@ int main()
                             userStatus[sockfd]=-1;
                             status=htonl(3); //3: user details wrong
                             write(sockfd,&status,sizeof(status));
+
                             cout<<"-----------------------------------\n";
                         }
 
@@ -355,24 +366,23 @@ int main()
                         cout<<"\nClient "<<i+1<<" : "<<buff<<"\n";
                         
                         //Request from the Client
-
                         string userIp=lowerCase(buff);
                         
                         stringstream ss(userIp);
                         vector<string>input;
                         
                         while(getline(ss,userIp,' '))
-                        {   
+                        {
                             if(userIp.size()==0) continue;
                             input.push_back(userIp);
                         }
 
                         userIp=input[0];
-
-                        bzero(buff,MAX); 
-
+                        
+                        bzero(buff,MAX);
+                        
                         //***********************************************************************
-                            
+                        
                         //if client wants to check if server is active
                         
                         if(userIp.compare("sound")==0)
@@ -388,7 +398,6 @@ int main()
                         //***********************************************************************
 
                         //WHEN WE ARE STORING NEW ANIMAL SOUND IN THE DATABASE
-                        
                         else if(userIp.compare("store")==0)
                         {   
                             
@@ -444,7 +453,6 @@ int main()
                         //***********************************************************************
 
                         //WHEN A CLIENT ENDS THE SERVER
-                        
                         else if (userIp.compare("end")==0)
                         {   
                             //CLOSING ALL THE ACTIVE CLIENTS , UNSETTING THEIR SOCKFDS
@@ -477,7 +485,6 @@ int main()
                         //***********************************************************************
 
                         //HANDLING THR ANIMAL SOUNDS
-                        
                         else
                         {   
                             cout<<"\nSOUND : "<<a->getSound(userIp)<<endl;
@@ -490,7 +497,6 @@ int main()
 
                             
                     }
-                    
                     //------------------------------------------------------------------------
                 }
 

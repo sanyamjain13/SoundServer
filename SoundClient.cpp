@@ -79,11 +79,11 @@ int main()
 	
         //----------------------------------------------------------------------------
         
-		//When inpur from user is readable
+		//When input from user is readable
         if(FD_ISSET(fileno(stdin),&rset))
         {   
 
-			//if user is not yet logined into the system
+			//if user is not yet logged in into the system
 
 			if(loginStats < 0)
 			{   
@@ -178,6 +178,14 @@ int main()
                 int status=0;
                 n = read(sockFd, &status, sizeof(status));
                 
+				//if server gets too many clients, so it closes the client sockfd
+				if(n==0)
+				{	
+					write(1,"\n\n__Server Overloaded !!__\n\n",sizeof("\n\n__Server Overloaded !!__\n\n"));
+					close(sockFd);
+					exit(0);
+				}
+
 				/*status=1 : NEW USER 
 				  status=2 : OLD USER   
 				  status=3 : INCORRECT DETAILS 
@@ -196,7 +204,7 @@ int main()
 				//2
                 else if(ntohl(status)==2)
                 {
-                    cout<<"~~ Welcome User ~~\n\nSuccessfully Logged in!  \n";
+                    cout<<"\n~~ Welcome User ~~\n\nSuccessfully Logged in!  \n";
                     cout<<"\n-> Type 'sound' to Know if Server is Active or not ! \n";
                     cout<<"____________________________________________________\n\n";
 
