@@ -388,7 +388,7 @@ int main()
                         if(userIp.compare("sound")==0)
                         {
                             cout<<"\nUSER : Hello Server Are You there ? \n";
-                            string ok="Yes SoundServer is Active :-))\n";
+                            string ok="Hey! I am there :D \n";
                             cout<<ok<<endl;
 
                             std::copy(ok.begin(), ok.end(),buff);
@@ -460,12 +460,12 @@ int main()
                             {
                                 if(Client[j]<0) continue;
                                
-                                int tempFd=Client[j];
+                                sockfd=Client[j];
                               
                                 cout<<"Closing client :"<<j+1<<endl;
-                                shutdown(tempFd,SHUT_RDWR);
-                                close(tempFd);
-                                FD_CLR(tempFd,&allset);
+                                shutdown(sockfd,SHUT_RDWR);
+                                close(sockfd);
+                                FD_CLR(sockfd,&allset);
                                 Client[j]=-1;
                                 userStatus.erase(sockfd);
                                 cout<<"------------------------------\n\n";

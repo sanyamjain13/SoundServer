@@ -152,7 +152,6 @@ int main()
 					cout<<"Animal Sound : ";
 					getline(cin,animalSound);
 
-					//if(animalName.size()==0 || animalSound.size()==0) continue;
 
 					storeResult=userIp+" "+animalName+" "+animalSound;
 					std::copy(storeResult.begin(),storeResult.end(),buff);
@@ -196,7 +195,7 @@ int main()
                 {
                     cout<<"\n~~ Welcome to the SoundServer ~~!\n\nYou are successfully Registered  !:) \n";
                     cout<<"\nNow you are an active user of 'SoundServer' !! \n";
-                    cout<<"\n>> Type 'sound' to Know if Server is Active or not ! \n";
+                    cout<<"\n>> Type 'sound' to Know what operations I can do! \n";
                     cout<<"____________________________________________________\n\n";
                     loginStats=1;
                 }
@@ -205,7 +204,7 @@ int main()
                 else if(ntohl(status)==2)
                 {
                     cout<<"\n~~ Welcome User ~~\n\nSuccessfully Logged in!  \n";
-                    cout<<"\n-> Type 'sound' to Know if Server is Active or not ! \n";
+                    cout<<"\n-> Type 'sound' to Know what operations I can do! ! \n";
                     cout<<"____________________________________________________\n\n";
 
                     loginStats=1;
@@ -282,7 +281,16 @@ int main()
 
 				if(userIp.compare("sound")==0)
 				{   
+					cout<<"_________________________________________________________\n";
 					cout<<"\nSoundServer : "<<result<<"\n";
+
+					cout<<">> Type 'query' to get the list of Animals I know.\n";
+					cout<<">> Type ~ Animal name ~ to know the Sound. \n";
+					cout<<">> Type 'store' to store a new Animal Sound.\n";
+					cout<<">> Type 'bye' to end connection with me.\n";
+					cout<<">> Type 'end' to close all the connections and the server\n";
+					cout<<"\n_________________________________________________________\n";
+
 				}
 				
 				//###############################################################
@@ -311,7 +319,7 @@ int main()
 
 					if(result=="none") cout<<"I DONT KNOW ANY ANIMAL SOUND :( \nQUERY : OK\n";
 
-					else cout<<"\nList of Animal Sounds I know : \n\n"<<result<<"\n>> QUERY : OK\n";
+					else cout<<"\nList of Animal Sounds I know : \n\n"<<result<<"\n\n>> QUERY : OK";
 					
 					cout<<"\n================================== \n";
 					
@@ -341,7 +349,7 @@ int main()
 			}
 			
 			//stdout tp screen, for the input for client now
-			write(1,"Client Message : ",sizeof("Client Message : "));
+			write(1,"\nClient Message : ",sizeof("\nClient Message : "));
 			
         }      
     }
