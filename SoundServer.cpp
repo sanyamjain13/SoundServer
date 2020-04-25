@@ -119,7 +119,7 @@ int main()
     
     // Declaring All the variables used in the program
     int listenFd, connFd, sockfd, maxfd, maxi, nready, i;
-    int Client[CLIENTSIZE],loginStatus[CLIENTSIZE];;
+    int Client[CLIENTSIZE];
     
     unordered_map<string,string>users;
     unordered_map<int,int>userStatus;
@@ -164,11 +164,11 @@ int main()
     for(i=0; i < CLIENTSIZE; i++)
     {
         Client[i]=-1;
-        loginStatus[i]=-1;
     }
 
     FD_ZERO(&allset);
     FD_SET(listenFd,&allset);
+
 	//------------------------------------------------------------
 
     //HANDLING MULTIPLE CLIENTS USING SELECT SYSTEM CALL
