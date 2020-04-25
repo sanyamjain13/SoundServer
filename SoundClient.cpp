@@ -99,7 +99,9 @@ int main()
 
 				//if(user has not entered the userid or password)
 				if(id.size() == 0 || password.size() == 0)
-				{
+				{	
+					write(1,"\nFields Empty! Try Again..\n",sizeof("\n Fields Empty! Try Again..\n"));
+
 					write(1,"\nUserId : ",sizeof("\nUserId : "));
 					continue;
 				}
@@ -221,6 +223,8 @@ int main()
 
 					char title[]="\nUserId : ";
 					write(1,title,strlen(title));
+
+					continue;
     
                 }
             }
